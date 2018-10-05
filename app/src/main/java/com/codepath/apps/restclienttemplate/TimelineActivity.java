@@ -57,7 +57,7 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 for (int i = 0; i <  response.length(); i++) {
-                    Tweet tweet = null;
+                    Tweet tweet;
                     try {
                         tweet = Tweet.fromJSON(response.getJSONObject(i));
                         tweets.add(tweet);
@@ -107,6 +107,37 @@ public class TimelineActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_new_tweet) {
             //launch new tweet activity
+            client.postTweet("test", new JsonHttpResponseHandler() {
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    //This is the method I need to implement
+                    Log.d("TwitterClient", response.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    Log.d("TwitterClient", response.toString());
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.d("TwitterClient", responseString);
+                    throwable.printStackTrace();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    Log.d("TwitterClient", errorResponse.toString());
+                    throwable.printStackTrace();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d("TwitterClient", errorResponse.toString());
+                    throwable.printStackTrace();
+                }
+            });
             return true;
         }
 
