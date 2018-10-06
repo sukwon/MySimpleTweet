@@ -9,5 +9,6 @@
     <string name="user_name">User Name</string>
     <string name="user_id">User Id</string>
     <string name="body_text">Body Text</string>
+    <string name="created_at">Created at</string>
 
 </resources>
