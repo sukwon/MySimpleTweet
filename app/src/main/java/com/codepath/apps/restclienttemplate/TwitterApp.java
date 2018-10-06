@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
+import com.codepath.apps.restclienttemplate.network.TwitterClient;
 import com.facebook.stetho.Stetho;
 
 /*

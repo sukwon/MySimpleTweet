@@ -18,4 +18,8 @@ public class User {
         user.profileImageUrl = jsonObject.getString("profile_image_url");
         return user;
     }
+
+    public String getScreenName() {
+        return "@" + screenName;
+    }
 }

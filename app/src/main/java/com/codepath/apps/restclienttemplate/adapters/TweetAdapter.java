@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import java.util.List;
@@ -39,7 +40,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         holder.tvUserName.setText(tweet.user.name);
         holder.tvBody.setText(tweet.body);
-        Glide.with(context).load(tweet.user.profileImageUrl).into(holder.ivProfileImate);
+        holder.tvUserId.setText(tweet.user.getScreenName());
+        Glide.with(context).load(tweet.user.profileImageUrl).into(holder.ivProfileImage);
     }
 
     @Override
@@ -48,16 +50,18 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView ivProfileImate;
+        public ImageView ivProfileImage;
         public TextView tvUserName;
         public TextView tvBody;
+        public TextView tvUserId;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            ivProfileImate = itemView.findViewById(R.id.ivProfileImage);
+            ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvUserName = itemView.findViewById(R.id.tvUserName);
             tvBody = itemView.findViewById(R.id.tvBody);
+            tvUserId = itemView.findViewById(R.id.tvUserId);
         }
     }
 }
