@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -40,17 +41,18 @@ public class NewTweetActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                User user;
+                User theUser;
                 try {
-                    user = User.fromJSON(response);
+                    theUser = User.fromJSON(response);
                     TextView tvUserId = findViewById(R.id.tvUserId);
                     TextView tvUserName = findViewById(R.id.tvUserName);
                     ImageView ivProfileImage = findViewById(R.id.ivProfileImage);
 
-                    tvUserId.setText(user.getScreenName());
-                    tvUserName.setText(user.name);
-                    Glide.with(NewTweetActivity.this).load(user.profileImageUrl).into(ivProfileImage);
+                    tvUserId.setText(theUser.getScreenName());
+                    tvUserName.setText(theUser.getName());
+                    Glide.with(NewTweetActivity.this).load(theUser.getProfileImageUrl()).into(ivProfileImage);
 
+                    user = theUser;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -84,13 +86,18 @@ public class NewTweetActivity extends AppCompatActivity {
 
     public void onClickTweetBtn(View view) {
         EditText etTweetBody = findViewById(R.id.etTweetBody);
-        String body = String.valueOf(etTweetBody.getText());
+        final String body = etTweetBody.getText().toString();
         client.postTweet(body, new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                //This is the method I need to implement
                 Log.d("TwitterClient", response.toString());
+
+                Intent i = new Intent();
+                i.putExtra("body", body);
+                i.putExtra("user", user);
+                setResult(RESULT_OK, i);
+                finish();
             }
 
             @Override

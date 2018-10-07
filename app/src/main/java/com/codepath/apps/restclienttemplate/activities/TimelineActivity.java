@@ -15,6 +15,7 @@ import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.adapters.TweetAdapter;
 import com.codepath.apps.restclienttemplate.listener.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.apps.restclienttemplate.network.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -181,17 +182,13 @@ public class TimelineActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == NEW_TWEET_ACTIVITY_REQUEST_CODE) {
-            Log.d("DEBUG", "onActivityResult");
-//            SearchFilter newFilter = (SearchFilter) data.getExtras().get(SearchFilter.id);
-//            filter = newFilter;
-//
-//            SearchView searchView = (SearchView) searchItem.getActionView();
-//            String query = searchView.getQuery().toString();
-//            if (query.isEmpty() == false) {
-//                articles.clear();
-//                adapter.notifyDataSetChanged();
-//                fetchArticles(1);
-//            }
+            String body = data.getStringExtra("body");
+            User user = (User) data.getSerializableExtra("user");
+
+            Tweet tweet = new Tweet(user, body);
+            tweets.add(0, tweet);
+            tweetAdapter.notifyItemInserted(0);
+            rvTweets.smoothScrollToPosition(0);
         }
     }
 }

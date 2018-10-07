@@ -16,6 +16,14 @@ public class Tweet {
     private User user;
     private String createdAt;
 
+    public Tweet() { }
+
+    public Tweet(User user, String body) {
+        this.user = user;
+        this.uid = 1234; //need real uid later?
+        this.body = body;
+        this.createdAt = "";
+    }
     public static Tweet fromJSON(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet();
         tweet.body = jsonObject.getString("text");
@@ -26,6 +34,9 @@ public class Tweet {
     }
 
     public String getCreatedAt() {
+        if (createdAt.isEmpty()) {
+            return "now";
+        }
         return getRelativeTimeAgo(createdAt);
     }
 
