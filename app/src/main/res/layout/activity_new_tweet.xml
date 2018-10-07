@@ -57,9 +57,12 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
-        android:hint="@string/whats_happening"
         android:backgroundTint="@color/ColorPrimary"
+        android:gravity="top|left"
+        android:hint="@string/whats_happening"
         android:inputType="textMultiLine"
+        android:lines="20"
+        android:maxLines="20"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnClose" />
@@ -76,4 +79,16 @@
         android:textColor="@color/WhiteText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/tvCharcterCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/text_count"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/btnTweet"
+        app:layout_constraintEnd_toStartOf="@+id/btnTweet"
+        app:layout_constraintTop_toTopOf="@+id/btnTweet" />
 </android.support.constraint.ConstraintLayout>

@@ -3,6 +3,8 @@ package com.codepath.apps.restclienttemplate.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -29,6 +31,25 @@ public class NewTweetActivity extends AppCompatActivity {
 
     private TwitterClient client;
     private User user;
+    private TextView tvCharacterCount;
+    private EditText etTweetBody;
+
+    private int bodyCount;
+
+    private static int maxBodyCount = 140;
+
+    private final TextWatcher mTextEditorWatcher = new TextWatcher() {
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            int result = bodyCount - s.length();
+            tvCharacterCount.setText(String.valueOf(result));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +58,14 @@ public class NewTweetActivity extends AppCompatActivity {
 
         client = TwitterApp.getRestClient(this);
         fetchAccountInfo();
+
+        bodyCount = maxBodyCount;
+
+        etTweetBody = findViewById(R.id.etTweetBody);
+        tvCharacterCount = findViewById(R.id.tvCharcterCount);
+
+        tvCharacterCount.setText(String.valueOf(bodyCount));
+        etTweetBody.addTextChangedListener(mTextEditorWatcher);
     }
 
     private void fetchAccountInfo() {
