@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -59,6 +60,10 @@ public class TimelineActivity extends AppCompatActivity {
         };
         // Adds the scroll listener to RecyclerView
         rvTweets.addOnScrollListener(scrollListener);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvTweets.getContext(),
+                linearLayoutManager.getOrientation());
+        rvTweets.addItemDecoration(dividerItemDecoration);
 
         client = TwitterApp.getRestClient(this);
         fetchFirstTweets();
