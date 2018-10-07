@@ -11,10 +11,10 @@ import java.util.Locale;
 
 public class Tweet {
 
-    public String body;
-    public long uid;
-    public User user;
-    public String createdAt;
+    private String body;
+    private long uid;
+    private User user;
+    private String createdAt;
 
     public static Tweet fromJSON(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet();
@@ -28,6 +28,19 @@ public class Tweet {
     public String getCreatedAt() {
         return getRelativeTimeAgo(createdAt);
     }
+
+    public String getBody() {
+        return body;
+    }
+
+    public long getUid() {
+        return uid;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
 
     private String getRelativeTimeAgo(String rawJsonDate) {
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
