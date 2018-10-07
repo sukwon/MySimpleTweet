@@ -58,7 +58,8 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:hint="@string/whats_happening"
-        android:inputType="text"
+        android:backgroundTint="@color/ColorPrimary"
+        android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnClose" />
@@ -69,8 +70,10 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="32dp"
-        android:text="@string/tweet"
         android:onClick="onClickTweetBtn"
+        android:text="@string/tweet"
+        android:background="@drawable/primary_button"
+        android:textColor="@color/WhiteText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 </android.support.constraint.ConstraintLayout>

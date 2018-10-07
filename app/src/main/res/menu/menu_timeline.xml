@@ -6,7 +6,7 @@
         android:id="@+id/action_new_tweet"
         android:orderInCategory="5"
         android:title="@string/action_new_tweet"
-        android:icon="@android:drawable/ic_menu_upload_you_tube"
+        android:icon="@drawable/twitter_icon"
         app:showAsAction="always|collapseActionView" />
 
 

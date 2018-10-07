@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
@@ -42,7 +45,14 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         holder.tvBody.setText(tweet.getBody());
         holder.tvUserId.setText(tweet.getUser().getScreenName());
         holder.tvCreationTime.setText(tweet.getCreatedAt());
-        Glide.with(context).load(tweet.getUser().getProfileImageUrl()).into(holder.ivProfileImage);
+
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(16));
+
+        Glide.with(context)
+                .load(tweet.getUser().getProfileImageUrl())
+                .apply(requestOptions)
+                .into(holder.ivProfileImage);
     }
 
     @Override
