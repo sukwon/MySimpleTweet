@@ -2,11 +2,7 @@ package com.codepath.apps.restclienttemplate.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -14,58 +10,28 @@ import android.view.MenuItem;
 
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TwitterApp;
-import com.codepath.apps.restclienttemplate.adapters.TweetAdapter;
-import com.codepath.apps.restclienttemplate.listener.EndlessRecyclerViewScrollListener;
+import com.codepath.apps.restclienttemplate.fragments.TweetListFragment;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.apps.restclienttemplate.network.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
 public class TimelineActivity extends AppCompatActivity {
 
     private TwitterClient client;
-    TweetAdapter tweetAdapter;
-    ArrayList<Tweet> tweets;
-    RecyclerView rvTweets;
-    private EndlessRecyclerViewScrollListener scrollListener;
-    private SwipeRefreshLayout swipeContainer;
+    private TweetListFragment fragmentTweetsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
-        rvTweets = findViewById(R.id.rvTweet);
-        tweets = new ArrayList<>();
-        tweetAdapter = new TweetAdapter(tweets);
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
-        rvTweets.setAdapter(tweetAdapter);
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        rvTweets.setLayoutManager(linearLayoutManager);
-
-        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                // Triggered only when new data needs to be appended to the list
-                // Add whatever code is needed to append new items to the bottom of the list
-                fetchMoreTweets(page);
-            }
-        };
-        // Adds the scroll listener to RecyclerView
-        rvTweets.addOnScrollListener(scrollListener);
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvTweets.getContext(),
-                linearLayoutManager.getOrientation());
-        rvTweets.addItemDecoration(dividerItemDecoration);
+        fragmentTweetsList = (TweetListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_timeline);
 
         client = TwitterApp.getRestClient(this);
         fetchFirstTweets();
@@ -73,13 +39,11 @@ public class TimelineActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.tool_bar);
         // Setting toolbar as the ActionBar with setSupportActionBar() call
         setSupportActionBar(toolbar);
-
-        setupPullToRefresh();
     }
 
     // Network
 
-    private void fetchFirstTweets() {
+    public void fetchFirstTweets() {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
 
             @Override
@@ -89,21 +53,7 @@ public class TimelineActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                tweets.clear();
-                tweetAdapter.notifyDataSetChanged();
-
-                for (int i = 0; i <  response.length(); i++) {
-                    Tweet tweet;
-                    try {
-                        tweet = Tweet.fromJSON(response.getJSONObject(i));
-                        tweets.add(tweet);
-                        tweetAdapter.notifyItemInserted(tweets.size() - 1);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                swipeContainer.setRefreshing(false);
+                fragmentTweetsList.addFirstItems(response);
             }
 
             @Override
@@ -126,28 +76,17 @@ public class TimelineActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchMoreTweets(int page){
-        if (tweets.size() == 0)
+    public void fetchMoreTweets(int page){
+        if (fragmentTweetsList.tweets.size() == 0)
             return;
 
-        Tweet lastTweet = tweets.get(tweets.size()-1);
+        Tweet lastTweet = fragmentTweetsList.tweets.get(fragmentTweetsList.tweets.size()-1);
         long max_id = lastTweet.getUid();
 
         client.getHomeTimeline(max_id, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response){
-                Log.d("DEBUG", response.toString());
-
-                for (int i = 0; i <  response.length(); i++) {
-                    Tweet tweet;
-                    try {
-                        tweet = Tweet.fromJSON(response.getJSONObject(i));
-                        tweets.add(tweet);
-                        tweetAdapter.notifyItemInserted(tweets.size() - 1);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
+                fragmentTweetsList.addMoreItems(response);
             }
 
             @Override
@@ -198,33 +137,9 @@ public class TimelineActivity extends AppCompatActivity {
             User user = (User) data.getSerializableExtra("user");
 
             Tweet tweet = new Tweet(user, body);
-            tweets.add(0, tweet);
-            tweetAdapter.notifyItemInserted(0);
-            rvTweets.smoothScrollToPosition(0);
+            fragmentTweetsList.tweets.add(0, tweet);
+            fragmentTweetsList.tweetAdapter.notifyItemInserted(0);
+            fragmentTweetsList.rvTweets.smoothScrollToPosition(0);
         }
-    }
-
-    // Pull to Refresh
-
-    private void setupPullToRefresh() {
-
-        // Pull to Refresh
-
-        swipeContainer = findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                fetchFirstTweets();
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
     }
 }
