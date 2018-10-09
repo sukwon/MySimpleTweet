@@ -16,6 +16,7 @@ import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.adapters.TweetAdapter;
 import com.codepath.apps.restclienttemplate.listener.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.network.TwitterClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +32,8 @@ public class TweetListFragment extends Fragment {
     protected EndlessRecyclerViewScrollListener scrollListener;
     protected SwipeRefreshLayout swipeContainer;
     protected LinearLayoutManager linearLayoutManager;
+
+    protected Boolean hasMoreDataToFetch;
 
     @Nullable
     @Override
@@ -59,8 +62,12 @@ public class TweetListFragment extends Fragment {
 
         setupPullToRefresh(v);
 
+        hasMoreDataToFetch = true;
+
         return v;
     }
+
+    // Update Data
 
     public void addFirstItems(JSONArray response) {
         tweets.clear();
@@ -78,6 +85,10 @@ public class TweetListFragment extends Fragment {
         }
 
         swipeContainer.setRefreshing(false);
+
+        if (response.length() < TwitterClient.itemCountPerRequest) {
+            hasMoreDataToFetch = false;
+        }
     }
 
     public void addMoreItems(JSONArray response) {

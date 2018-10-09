@@ -63,7 +63,7 @@ public class MentionsTimelineFragment extends TweetListFragment {
 
     @Override
     protected void fetchMoreTweets(int page){
-        if (tweets.size() == 0)
+        if (tweets.size() == 0 || hasMoreDataToFetch == false)
             return;
 
         Tweet lastTweet = tweets.get(tweets.size()-1);

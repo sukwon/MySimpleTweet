@@ -33,6 +33,8 @@ public class TwitterClient extends OAuthBaseClient {
 	// See https://developer.chrome.com/multidevice/android/intents
 	public static final String REST_CALLBACK_URL_TEMPLATE = "intent://%s#Intent;action=android.intent.action.VIEW;scheme=%s;package=%s;S.browser_fallback_url=%s;end";
 
+	public static final int itemCountPerRequest = 25;
+
 	public TwitterClient(Context context) {
 		super(context, REST_API_INSTANCE,
 				REST_URL,
@@ -47,7 +49,7 @@ public class TwitterClient extends OAuthBaseClient {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
-		params.put("count", 25);
+		params.put("count", itemCountPerRequest);
 		params.put("since_id", 1); // need this for pull to refresh
 		client.get(apiUrl, params, handler);
 	}
@@ -55,7 +57,7 @@ public class TwitterClient extends OAuthBaseClient {
     public void getHomeTimeline(long max_id, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
         RequestParams params = new RequestParams();
-        params.put("count", 25);
+        params.put("count", itemCountPerRequest);
         params.put("since_id", 1);
         params.put("max_id", max_id);
         client.get(apiUrl, params, handler);
@@ -77,7 +79,7 @@ public class TwitterClient extends OAuthBaseClient {
 		String apiUrl = getApiUrl("statuses/mentions_timeline.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
-		params.put("count", 25);
+		params.put("count", itemCountPerRequest);
 		params.put("since_id", 1); // need this for pull to refresh
 		client.get(apiUrl, params, handler);
 	}
@@ -86,7 +88,7 @@ public class TwitterClient extends OAuthBaseClient {
 		String apiUrl = getApiUrl("statuses/mentions_timeline.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
-		params.put("count", 25);
+		params.put("count", itemCountPerRequest);
 		params.put("since_id", 1); // need this for pull to refresh
 		params.put("max_id", max_id);
 		client.get(apiUrl, params, handler);
