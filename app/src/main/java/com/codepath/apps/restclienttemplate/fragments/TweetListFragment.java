@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codepath.apps.restclienttemplate.R;
-import com.codepath.apps.restclienttemplate.activities.TimelineActivity;
 import com.codepath.apps.restclienttemplate.adapters.TweetAdapter;
 import com.codepath.apps.restclienttemplate.listener.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -25,12 +24,13 @@ import java.util.ArrayList;
 
 public class TweetListFragment extends Fragment {
 
-    public TweetAdapter tweetAdapter;
-    public ArrayList<Tweet> tweets;
-    public RecyclerView rvTweets;
+    protected TweetAdapter tweetAdapter;
+    protected ArrayList<Tweet> tweets;
+    protected RecyclerView rvTweets;
 
-    private EndlessRecyclerViewScrollListener scrollListener;
-    private SwipeRefreshLayout swipeContainer;
+    protected EndlessRecyclerViewScrollListener scrollListener;
+    protected SwipeRefreshLayout swipeContainer;
+    protected LinearLayoutManager linearLayoutManager;
 
     @Nullable
     @Override
@@ -42,17 +42,15 @@ public class TweetListFragment extends Fragment {
         tweetAdapter = new TweetAdapter(tweets);
         rvTweets.setAdapter(tweetAdapter);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager = new LinearLayoutManager(getContext());
         rvTweets.setLayoutManager(linearLayoutManager);
 
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                final TimelineActivity activity = (TimelineActivity) getActivity();
-                activity.fetchMoreTweets(page);
+                fetchMoreTweets(page);
             }
         };
-        // Adds the scroll listener to RecyclerView
         rvTweets.addOnScrollListener(scrollListener);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvTweets.getContext(),
@@ -96,6 +94,12 @@ public class TweetListFragment extends Fragment {
         }
     }
 
+    public void insertTweet(Tweet tweet, int index) {
+        tweets.add(index, tweet);
+        tweetAdapter.notifyItemInserted(index);
+        rvTweets.smoothScrollToPosition(index);
+    }
+
     // Pull to Refresh
 
     private void setupPullToRefresh(View view) {
@@ -107,8 +111,7 @@ public class TweetListFragment extends Fragment {
                 // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
-                TimelineActivity activity = (TimelineActivity) getActivity();
-                activity.fetchFirstTweets();
+                fetchFirstTweets();
             }
         });
         // Configure the refreshing colors
@@ -117,4 +120,7 @@ public class TweetListFragment extends Fragment {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
     }
+
+    protected void fetchFirstTweets() {}
+    protected void fetchMoreTweets(int page) {}
 }
