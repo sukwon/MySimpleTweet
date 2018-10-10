@@ -2,31 +2,36 @@ package com.codepath.apps.restclienttemplate.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.codepath.apps.restclienttemplate.R;
-import com.codepath.apps.restclienttemplate.fragments.TweetListFragment;
+import com.codepath.apps.restclienttemplate.adapters.TweetsPagerAdapter;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.models.User;
 
 public class TimelineActivity extends AppCompatActivity {
-
-    private TweetListFragment fragmentTweetsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
-        fragmentTweetsList = (TweetListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_timeline);
-
-
         Toolbar toolbar = findViewById(R.id.tool_bar);
         // Setting toolbar as the ActionBar with setSupportActionBar() call
         setSupportActionBar(toolbar);
+
+        // setup tap layout
+
+        ViewPager vpPager = findViewById(R.id.viewpager);
+        vpPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager(), this));
+
+        TabLayout tabLayout = findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(vpPager);
     }
 
     // Tool bar
@@ -70,7 +75,7 @@ public class TimelineActivity extends AppCompatActivity {
             User user = (User) data.getSerializableExtra("user");
             Tweet tweet = new Tweet(user, body);
 
-            fragmentTweetsList.insertTweet(tweet, 0);
+//            fragmentTweetsList.insertTweet(tweet, 0);
         }
     }
 }
