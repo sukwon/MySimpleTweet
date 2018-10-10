@@ -54,6 +54,9 @@ public class TimelineActivity extends AppCompatActivity {
         if (id == R.id.action_new_tweet) {
             launchArticleActivity();
             return true;
+        } else if (id == R.id.miProfile) {
+            launchProfileActivity();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -64,7 +67,7 @@ public class TimelineActivity extends AppCompatActivity {
     private final int NEW_TWEET_ACTIVITY_REQUEST_CODE = 20;
 
     private void launchArticleActivity() {
-        Intent i = new Intent(getApplicationContext(), NewTweetActivity.class);
+        Intent i = new Intent(this, NewTweetActivity.class);
         startActivityForResult(i, NEW_TWEET_ACTIVITY_REQUEST_CODE);
     }
 
@@ -75,7 +78,13 @@ public class TimelineActivity extends AppCompatActivity {
             User user = (User) data.getSerializableExtra("user");
             Tweet tweet = new Tweet(user, body);
 
+            // todo: fix this
 //            fragmentTweetsList.insertTweet(tweet, 0);
         }
+    }
+
+    private void launchProfileActivity() {
+        Intent i = new Intent(this, ProfileActivity.class);
+        startActivity(i);
     }
 }
