@@ -3,4 +3,5 @@
     <color name="ColorPrimary">#1DA1F2</color>
     <color name="ColorPrimaryDark">#1DA1F2</color>
     <color name="WhiteText">#FFFFFF</color>
+    <color name="Line">#B2B2B2</color>
 </resources>

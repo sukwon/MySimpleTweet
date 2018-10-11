@@ -14,6 +14,8 @@
     <string name="whats_happening">"What's happening?"</string>
     <string name="tweet">"TWEET"</string>
     <string name="text_count">"0"</string>
+    <string name="followers">"15 followers"</string>
+    <string name="following">"42 following"</string>
 
 
 </resources>
