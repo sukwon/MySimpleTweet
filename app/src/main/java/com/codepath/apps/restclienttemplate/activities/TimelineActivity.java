@@ -72,7 +72,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetListFrag
             launchNewTweetActivity();
             return true;
         } else if (id == R.id.miProfile) {
-            launchProfileActivity();
+            launchProfileActivity(user);
             return true;
         }
 
@@ -100,9 +100,9 @@ public class TimelineActivity extends AppCompatActivity implements TweetListFrag
         }
     }
 
-    private void launchProfileActivity() {
+    private void launchProfileActivity(User theUser) {
         Intent i = new Intent(this, ProfileActivity.class);
-        i.putExtra("user", user);
+        i.putExtra("user", theUser);
         startActivity(i);
     }
 
@@ -151,5 +151,10 @@ public class TimelineActivity extends AppCompatActivity implements TweetListFrag
     @Override
     public void onTweetSelected(Tweet tweet) {
         Toast.makeText(this, tweet.getBody(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onProfileSelected(User theUser) {
+        launchProfileActivity(theUser);
     }
 }

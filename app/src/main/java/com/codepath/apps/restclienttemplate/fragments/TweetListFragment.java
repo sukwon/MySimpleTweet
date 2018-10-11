@@ -16,6 +16,7 @@ import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.adapters.TweetAdapter;
 import com.codepath.apps.restclienttemplate.listener.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.apps.restclienttemplate.network.TwitterClient;
 
 import org.json.JSONArray;
@@ -27,6 +28,7 @@ public class TweetListFragment extends Fragment implements TweetAdapter.TweetAda
 
     public interface TweetSelectedListener {
         void onTweetSelected(Tweet tweet);
+        void onProfileSelected(User user);
     }
 
     protected TweetAdapter tweetAdapter;
@@ -146,5 +148,16 @@ public class TweetListFragment extends Fragment implements TweetAdapter.TweetAda
         Tweet tweet = tweets.get(position);
         TweetSelectedListener listener = (TweetSelectedListener) getActivity();
         listener.onTweetSelected(tweet);
+    }
+
+    @Override
+    public void onProfilePhotoSelected(View view, int position) {
+        if (getActivity() instanceof TweetSelectedListener == false) {
+            return;
+        }
+        Tweet tweet = tweets.get(position);
+        User user = tweet.getUser();
+        TweetSelectedListener listener = (TweetSelectedListener) getActivity();
+        listener.onProfileSelected(user);
     }
 }

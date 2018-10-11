@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.codepath.apps.restclienttemplate.TwitterApp;
+import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.network.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -66,6 +67,28 @@ public class UserTimelineFragment extends TweetListFragment {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 Log.d("TwitterClient", errorResponse.toString());
                 throwable.printStackTrace();
+            }
+        });
+    }
+
+    @Override
+    protected void fetchMoreTweets(int page){
+        if (tweets.size() == 0 || hasMoreDataToFetch == false)
+            return;
+
+        Tweet lastTweet = tweets.get(tweets.size()-1);
+        long max_id = lastTweet.getUid();
+        String screenName = getArguments().getString("screen_name");
+
+        client.getUserTimeline(max_id, screenName, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response){
+                addMoreItems(response);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse){
+                Log.d("DEBUG", errorResponse.toString());
             }
         });
     }

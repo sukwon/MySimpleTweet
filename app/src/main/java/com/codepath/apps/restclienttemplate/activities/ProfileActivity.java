@@ -24,8 +24,8 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        String screenName = getIntent().getStringExtra("screen_name");
         user = (User) getIntent().getSerializableExtra("user");
+        String screenName = user.getScreenName();
 
         UserTimelineFragment fragment = UserTimelineFragment.newInstance(screenName);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
