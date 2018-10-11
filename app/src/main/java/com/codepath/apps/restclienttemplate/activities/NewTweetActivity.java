@@ -22,7 +22,6 @@ import com.codepath.apps.restclienttemplate.network.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
@@ -57,7 +56,6 @@ public class NewTweetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_tweet);
 
         client = TwitterApp.getRestClient(this);
-        fetchAccountInfo();
 
         bodyCount = maxBodyCount;
 
@@ -66,61 +64,27 @@ public class NewTweetActivity extends AppCompatActivity {
 
         tvCharacterCount.setText(String.valueOf(bodyCount));
         etTweetBody.addTextChangedListener(mTextEditorWatcher);
+
+        user = (User) getIntent().getSerializableExtra("user");
+
+        setupViews();
     }
 
-    private void fetchAccountInfo() {
-        client.getAccountInfo(new JsonHttpResponseHandler() {
+    private void setupViews() {
+        TextView tvUserId = findViewById(R.id.tvUserId);
+        TextView tvUserName = findViewById(R.id.tvUserName);
+        ImageView ivProfileImage = findViewById(R.id.ivProfileImage);
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                User theUser;
-                try {
-                    theUser = User.fromJSON(response);
-                    TextView tvUserId = findViewById(R.id.tvUserId);
-                    TextView tvUserName = findViewById(R.id.tvUserName);
-                    ImageView ivProfileImage = findViewById(R.id.ivProfileImage);
+        tvUserId.setText(user.getScreenName());
+        tvUserName.setText(user.getName());
 
-                    tvUserId.setText(theUser.getScreenName());
-                    tvUserName.setText(theUser.getName());
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(16));
 
-                    RequestOptions requestOptions = new RequestOptions();
-                    requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(16));
-
-                    Glide.with(NewTweetActivity.this)
-                            .load(theUser.getProfileImageUrl())
-                            .apply(requestOptions)
-                            .into(ivProfileImage);
-
-                    user = theUser;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("TwitterClient", response.toString());
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d("TwitterClient", response.toString());
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d("TwitterClient", responseString);
-                throwable.printStackTrace();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                Log.d("TwitterClient", errorResponse.toString());
-                throwable.printStackTrace();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("TwitterClient", errorResponse.toString());
-                throwable.printStackTrace();
-            }
-        });
+        Glide.with(NewTweetActivity.this)
+                .load(user.getProfileImageUrl())
+                .apply(requestOptions)
+                .into(ivProfileImage);
     }
 
     public void onClickTweetBtn(View view) {
@@ -134,7 +98,6 @@ public class NewTweetActivity extends AppCompatActivity {
 
                 Intent i = new Intent();
                 i.putExtra("body", body);
-                i.putExtra("user", user);
                 setResult(RESULT_OK, i);
                 finish();
             }
