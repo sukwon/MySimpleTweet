@@ -23,7 +23,11 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class TweetListFragment extends Fragment {
+public class TweetListFragment extends Fragment implements TweetAdapter.TweetAdapterListener {
+
+    public interface TweetSelectedListener {
+        void onTweetSelected(Tweet tweet);
+    }
 
     protected TweetAdapter tweetAdapter;
     protected ArrayList<Tweet> tweets;
@@ -42,7 +46,7 @@ public class TweetListFragment extends Fragment {
 
         rvTweets = v.findViewById(R.id.rvTweet);
         tweets = new ArrayList<>();
-        tweetAdapter = new TweetAdapter(tweets);
+        tweetAdapter = new TweetAdapter(tweets, this);
         rvTweets.setAdapter(tweetAdapter);
 
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -134,4 +138,13 @@ public class TweetListFragment extends Fragment {
 
     protected void fetchFirstTweets() {}
     protected void fetchMoreTweets(int page) {}
+
+    // TweetAdapterListener
+
+    @Override
+    public void onItemSelected(View view, int position) {
+        Tweet tweet = tweets.get(position);
+        TweetSelectedListener listener = (TweetSelectedListener) getActivity();
+        listener.onTweetSelected(tweet);
+    }
 }
