@@ -17,6 +17,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TwitterApp;
+import com.codepath.apps.restclienttemplate.Utils;
 import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.apps.restclienttemplate.network.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -68,6 +69,8 @@ public class NewTweetActivity extends AppCompatActivity {
         user = (User) getIntent().getSerializableExtra("user");
 
         setupViews();
+
+        Utils.handleNetworkAvailability(this);
     }
 
     private void setupViews() {

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TwitterApp;
+import com.codepath.apps.restclienttemplate.Utils;
 import com.codepath.apps.restclienttemplate.adapters.TweetsPagerAdapter;
 import com.codepath.apps.restclienttemplate.fragments.TweetListFragment;
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -49,6 +50,8 @@ public class TimelineActivity extends AppCompatActivity implements TweetListFrag
 
         TabLayout tabLayout = findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(vpPager);
+
+        Utils.handleNetworkAvailability(this);
     }
 
     // Tool bar
