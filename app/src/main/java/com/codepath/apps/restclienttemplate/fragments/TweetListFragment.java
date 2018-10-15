@@ -17,7 +17,6 @@ import com.codepath.apps.restclienttemplate.adapters.TweetAdapter;
 import com.codepath.apps.restclienttemplate.listener.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.models.User;
-import com.codepath.apps.restclienttemplate.network.TwitterClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -91,18 +90,23 @@ public class TweetListFragment extends Fragment implements TweetAdapter.TweetAda
         }
 
         swipeContainer.setRefreshing(false);
-
-        if (response.length() < TwitterClient.itemCountPerRequest) {
-            hasMoreDataToFetch = false;
-        }
     }
 
     public void addMoreItems(JSONArray response) {
-
         for (int i = 0; i <  response.length(); i++) {
             Tweet tweet;
             try {
                 tweet = Tweet.fromJSON(response.getJSONObject(i));
+                for (Tweet theTweet: tweets) {
+                    if (tweet.getUid() == theTweet.getUid()) {
+                        hasMoreDataToFetch = false;
+                        break;
+                    }
+                }
+
+                if (hasMoreDataToFetch == false) {
+                    break;
+                }
                 tweets.add(tweet);
                 tweetAdapter.notifyItemInserted(tweets.size() - 1);
             } catch (JSONException e) {

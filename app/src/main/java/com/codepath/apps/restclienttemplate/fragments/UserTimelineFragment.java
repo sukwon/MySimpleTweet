@@ -80,7 +80,7 @@ public class UserTimelineFragment extends TweetListFragment {
         long max_id = lastTweet.getUid();
         String screenName = getArguments().getString("screen_name");
 
-        client.getUserTimeline(max_id, screenName, new JsonHttpResponseHandler() {
+        client.getUserTimeline(max_id - 1, screenName, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response){
                 addMoreItems(response);

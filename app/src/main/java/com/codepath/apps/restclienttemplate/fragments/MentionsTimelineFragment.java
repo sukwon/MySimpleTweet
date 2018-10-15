@@ -69,7 +69,7 @@ public class MentionsTimelineFragment extends TweetListFragment {
         Tweet lastTweet = tweets.get(tweets.size()-1);
         long max_id = lastTweet.getUid();
 
-        client.getMentionsTimeline(max_id, new JsonHttpResponseHandler() {
+        client.getMentionsTimeline(max_id - 1, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response){
                 addMoreItems(response);
